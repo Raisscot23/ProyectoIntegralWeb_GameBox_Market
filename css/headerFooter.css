@@ -1,0 +1,84 @@
+header {
+    width: 100%;
+    background: rgb(13, 13, 13);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 30px;
+}
+
+#logo_head {
+    width: 120px;
+    cursor: pointer;
+}
+
+#menu_head {
+    margin-left: auto;
+}
+
+#menu_head ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+#menu_head ul a {
+    color: #ffffff;
+    text-decoration: none;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    padding: 10px 15px;
+    transition: 0.3s;
+}
+
+#menu_head ul a:hover {
+    color: rgb(112, 0, 0);
+}
+
+#userIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/*----------------------------------------*/
+
+footer {
+    width: 100%;
+    height: 25%;
+    background-color: #111111;
+    color: white;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#redes {
+    padding: 10px;
+    justify-content: center;
+}
+
+#redes a {
+    width: 30px;
+    margin-top: 5px;
+    margin-left: 20px;
+}
+
+#redes li {
+    display: inline-block;
+}
+
+#avisos li {
+    margin: 15px;
+    padding: 15px;
+    display: inline-block;
+}
+
+a{
+    color: white;
+}
+
+a:hover{
+    color: blue;
+}
