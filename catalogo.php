@@ -1,47 +1,28 @@
 <?php
 include 'conn.php';
 
-// Si el formulario fue enviado
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-    $nombre = $_POST['nombre'];
-    $description = $_POST['description'];
-    $price = $_POST['price'];
-    $stock = $_POST['stock'];
-
-    // Subir imagen correctamente
-    if (isset($_FILES['img']) && $_FILES['img']['error'] == 0) {
-        $imagen = file_get_contents($_FILES['img']['tmp_name']);
-
-        // Usamos prepared statement para insertar el producto
-        $stmt = $conn->prepare("INSERT INTO producto (product_tipo_id, nombre, description, price, stock, img) VALUES (1, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssdis", $nombre, $description, $price, $stock, $imagen);
-
-        if ($stmt->execute()) {
-            echo "<p>Producto agregado con éxito</p>";
-        } else {
-            echo "<p>Error: " . $stmt->error . "</p>";
-        }
-
-        $stmt->close();
-    } else {
-        echo "<p>Error al subir la imagen.</p>";
-    }
-}
-
-$conn->close();
+$sql = "SELECT * FROM producto";
+$result = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
 
-    <link rel="stylesheet" href="css/headerFooter.css">
-    <link rel="stylesheet" href="css/create.css">
+<link rel="stylesheet" href="css/headerFooter.css">
+<link rel="stylesheet" href="css/catalogo.css">
 
-    <title>Agregar Producto</title>
+<title>Catálogo</title>
+<style>
+
+table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+img { display: block; max-width: 100px; height: auto; }
+a.button { padding: 5px 10px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 4px; }
+a.button.delete { background-color: #f44336; }
+</style>
+
 </head>
 <body>
 
@@ -61,29 +42,41 @@ $conn->close();
         </section>
 </header>
 
-<h2>Agregar Producto</h2>
+<h2>Lista de Productos</h2>
 
-<form action="create.php" method="POST" enctype="multipart/form-data">
-    <label>Nombre:</label><br>
-    <input type="text" name="nombre" required><br><br>
+<a href="create.php" class="button">Agregar Nuevo Producto</a><br><br>
 
-    <label>Descripción:</label><br>
-    <textarea name="description" required></textarea><br><br>
+<table>
+<tr>
+    <th>Nombre</th>
+    <th>Descripción</th>
+    <th>Precio</th>
+    <th>Stock</th>
+    <th>Imagen</th>
+    <th>Acciones</th>
+</tr>
 
-    <label>Precio:</label><br>
-    <input type="number" step="0.01" name="price" required><br><br>
+<?php while($row = $result->fetch_assoc()): ?>
+<tr>
+    <td><?= htmlspecialchars($row['nombre']) ?></td>
+    <td><?= htmlspecialchars($row['description']) ?></td>
+    <td>$<?= number_format($row['price'], 2) ?></td>
+    <td><?= $row['stock'] ?></td>
+    <td>
+        <?php if (!empty($row['img'])): ?>
+            <img src="data:image/jpeg;base64,<?= base64_encode($row['img']) ?>" alt="<?= htmlspecialchars($row['nombre']) ?>">
+        <?php else: ?>
+            Sin imagen
+        <?php endif; ?>
+    </td>
+    <td>
+        <a href="update.php?id=<?= $row['product_id'] ?>" class="button">Editar</a>
+        <a href="delete.php?id=<?= $row['product_id'] ?>" class="button delete" onclick="return confirm('¿Seguro que deseas eliminar este producto?');">Eliminar</a>
+    </td>
+</tr>
+<?php endwhile; ?>
+</table>
 
-    <label>Stock:</label><br>
-    <input type="number" name="stock" required><br><br>
-
-    <label>Imagen:</label><br>
-    <input type="file" name="img" required><br><br>
-
-    <button type="submit">Guardar Producto</button>
-</form>
-
-<br>
-<a href="catalogo.php">Ver productos</a>
 
         <footer>
             <div id="redes">
@@ -118,3 +111,5 @@ $conn->close();
 
 </body>
 </html>
+
+<?php $conn->close(); ?>

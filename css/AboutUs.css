@@ -1,0 +1,60 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/*-------------------------------------------*/
+
+#contenido {
+    display: grid;
+    grid-template-areas: "desarrollador1 desarrollador2";
+    justify-items: center; 
+    align-items: center; 
+    gap: 10px; 
+    grid-template-areas:
+        "desarrollador1 desarrollador2"
+}
+
+#contenido img {
+    width: 45%;
+    border: black solid 2px;
+    border-radius: 50%;
+}
+
+#desarrollador1,
+#desarrollador2 {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 50px;
+    width: 50%;
+}
+
+@media(max-width: 900px) {
+    #contenido {
+        grid-template-areas:
+        "desarrollador1"
+        "desarrollador2";
+    }
+}
+
+/*-------------------------------------------*/
+
+#title{
+    margin: 25px;
+    padding: 25px;
+}
+
+.preguntas{
+    margin: 25px;
+    display: grid;
+    grid-template-areas: "question question question";
+    gap: 10px;
+
+}
+
+.question{
+    margin: 45px;
+    width: 50%;
+}
