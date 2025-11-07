@@ -1,5 +1,17 @@
 <?php
 include 'conn.php';
+session_start();
+
+$rol = $_SESSION['rol'] ?? null;
+$nombre = $_SESSION['nombre'] ?? 'Invitado';
+
+// ✅ Verificar si hay una imagen guardada en la sesión
+if (!empty($_SESSION['img'])) {
+    $userImage = 'data:image/jpeg;base64,' . $_SESSION['img'];
+} else {
+    $userImage = 'recursos/img/placeholder.jpg'; // imagen por defecto
+}
+
 $uploadDir = "uploads/";
 
 if (!isset($_GET['id'])) {
@@ -68,24 +80,82 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <link rel="stylesheet" href="css/update.css">
 
 <title>Editar Producto</title>
+
+<style>
+        #userIcon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #fff;
+        }
+
+        .logout-btn {
+            background-color: #ff4040;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-left: 15px;
+            transition: background-color 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background-color: #cc0000;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-name {
+            font-weight: bold;
+            color: white;
+        }
+    </style>
 </head>
 <body>
-
 <header>
-        <a href="index.html">
+        <a href="index.php">
             <img id="logo_head" src="recursos/img/palceholder 2.svg" alt="Logo GameBox">
         </a>
 
         <section id="menu_head">
             <ul>
-                <!--Esta parte es temporal para revidar el crud-->
-                <li><a href="create.php">CRUD</a></li>
+                <?php if ($rol == 1): // Mostrar CRUD solo si el usuario es administrador ?>
+                    <li><a href="create.php">CRUD</a></li>
+                <?php endif; ?>
+
                 <li><a href="catalogo.php">Catálogo</a></li>
-                <li><a href="carrito.html">Carrito de compas</a></li>
-                <li><a href="userProfile.html"><img id="userIcon" src="recursos/img/placeholder.jpg" alt="Perfil del usuario"></a></li>
+
+
+                <li>
+                    <?php if ($rol): ?>
+                        <a href="carrito.php">Carrito de compras</a>
+                    <?php else: ?>
+                        <a href="login.php"">Carrito de compras</a>
+                    <?php endif; ?>
+                </li>
+                
+                <li class="user-info">
+                    <?php if ($rol): ?>
+                        <a href="userProfile.php">
+                            <img id="userIcon" src="<?php echo htmlspecialchars($userImage); ?>" alt="Perfil del usuario">
+                        </a>
+                        <span class="user-name"><?php echo htmlspecialchars($nombre); ?></span>
+                        <form method="POST" action="logout.php" style="display:inline;">
+                            <button type="submit" class="logout-btn">Cerrar sesión</button>
+                        </form>
+                    <?php else: ?>
+                        <a href="login.php" class="logout-btn" style="background-color:#007bff;">Iniciar sesión</a>
+                    <?php endif; ?>
+                </li>
             </ul>
         </section>
-</header>
+    </header>
 
 <h2>Editar Producto</h2>
 
@@ -130,10 +200,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div id="disclaimer">
                 <h4>© 2025 GameBox Market | Todos los derechos reservados.</h4>
                 <h4>Los diseños y productos que aparecen en el sitio pertenecen a sus respectivos creadores.</h4><br>
-
             </div>
 
-            <h4>Si quieres conocer a los desarrolladores detrás del sitio, has click <a href="aboutUs.html">aquí</a></h4>
+            <h4>Si quieres conocer a los desarrolladores detrás del sitio,<a href="aboutUs.php"> haz click aquí</a></h4>
 
             <div id="avisos">
                 <ul>
@@ -142,7 +211,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <li>Aviso de privacidad</li>
                     <li>Ayuda</li>
                     <li>Política sobre uso de materiales</li>
-                    <li>Declaración de afilación</li>
+                    <li>Declaración de afiliación</li>
                     <li>Directrices para transmisiones</li>
                     <li>Update notes</li>
                     <li>Licencias de plugins</li>

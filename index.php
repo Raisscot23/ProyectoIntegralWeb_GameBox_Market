@@ -1,9 +1,5 @@
 <?php
-include 'conn.php';
 session_start();
-
-$sql = "SELECT * FROM producto";
-$result = $conn->query($sql);
 
 $rol = $_SESSION['rol'] ?? null;
 $nombre = $_SESSION['nombre'] ?? 'Invitado';
@@ -18,20 +14,15 @@ if (!empty($_SESSION['img'])) {
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/headerFooter.css">
+    <link rel="stylesheet" href="css/index.css">
+    <title>GameBox Market</title>
 
-<link rel="stylesheet" href="css/headerFooter.css">
-<link rel="stylesheet" href="css/catalogo.css">
-
-<title>Catálogo</title>
-<style>
-table { border-collapse: collapse; width: 100%; }
-th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
-img { display: block; max-width: 100px; height: auto; }
-a.button { padding: 5px 10px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 4px; }
-a.button.delete { background-color: #f44336; }
-
+    <style>
         #userIcon {
             width: 45px;
             height: 45px;
@@ -65,11 +56,11 @@ a.button.delete { background-color: #f44336; }
             font-weight: bold;
             color: white;
         }
-</style>
-
+    </style>
 </head>
+
 <body>
-<header>
+    <header>
         <a href="index.php">
             <img id="logo_head" src="recursos/img/palceholder 2.svg" alt="Logo GameBox">
         </a>
@@ -108,42 +99,81 @@ a.button.delete { background-color: #f44336; }
         </section>
     </header>
 
-<h2>Lista de Productos</h2>
+    <!-- CONTENIDO PRINCIPAL -->
+    <div id="contenido">
+        <div id="promociones">
+            <h1>Promociones</h1>
+            <div id="promociones_wrapper">
+                <div class="promociones_viewport">
+                    <div class="promociones_contenedor">
 
-<a href="create.php" class="button">Agregar Nuevo Producto</a><br><br>
+                        <div class="tarjetaPromocion">
+                            <img id="promocion_Img" src="recursos/img/palceholder 2.svg" alt="">
+                            <h3>999$</h3>
+                            <button><a href="carrito.php">Añadir al carrito</a></button>
+                        </div>
 
-<table>
-<tr>
-    <th>Nombre</th>
-    <th>Descripción</th>
-    <th>Precio</th>
-    <th>Stock</th>
-    <th>Imagen</th>
-    <th>Acciones</th>
-</tr>
+                        <div class="tarjetaPromocion">
+                            <img id="promocion_Img" src="recursos/img/palceholder 2.svg" alt="">
+                            <h3>999$</h3>
+                            <button><a href="carrito.php">Añadir al carrito</a></button>
+                        </div>
 
-<?php while($row = $result->fetch_assoc()): ?>
-<tr>
-    <td><?= htmlspecialchars($row['nombre']) ?></td>
-    <td><?= htmlspecialchars($row['description']) ?></td>
-    <td>$<?= number_format($row['price'], 2) ?></td>
-    <td><?= $row['stock'] ?></td>
-    <td>
-        <?php if (!empty($row['img'])): ?>
-            <img src="data:image/jpeg;base64,<?= base64_encode($row['img']) ?>" alt="<?= htmlspecialchars($row['nombre']) ?>">
-        <?php else: ?>
-            Sin imagen
-        <?php endif; ?>
-    </td>
-    <td>
-        <a href="update.php?id=<?= $row['product_id'] ?>" class="button">Editar</a>
-        <a href="delete.php?id=<?= $row['product_id'] ?>" class="button delete" onclick="return confirm('¿Seguro que deseas eliminar este producto?');">Eliminar</a>
-        <a href="read.php?id=<?= $row['product_id'] ?>" class="button">Ver producto</a>
-    </td>
-</tr>
-<?php endwhile; ?>
-</table>
+                        <div class="tarjetaPromocion">
+                            <img id="promocion_Img" src="recursos/img/palceholder 2.svg" alt="">
+                            <h3>999$</h3>
+                            <button><a href="carrito.php">Añadir al carrito</a></button>
+                        </div>
 
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="recientes">
+            <h1>Productos Recientes</h1>
+            <p>Lorem ipsum dolor sit amet et delectus accommodare.</p>
+
+            <div class="tarjetasRecientesWrapper">
+                <div class="tarjetaReciente">
+                    <img id="reciente_Img" src="recursos/img/palceholder 2.svg" alt="">
+                    <h3>Lorem ipsum dolor sit amet consectetur adipisicing elit..</h3>
+                    <a id="readMore" href="">Leer más</a>
+                </div>
+
+                <div class="tarjetaReciente">
+                    <img id="reciente_Img" src="recursos/img/palceholder 2.svg" alt="">
+                    <h3>Lorem ipsum dolor sit amet consectetur adipisicing elit..</h3>
+                    <a id="readMore" href="">Leer más</a>
+                </div>
+
+                <div class="tarjetaReciente">
+                    <img id="reciente_Img" src="recursos/img/palceholder 2.svg" alt="">
+                    <h3>Lorem ipsum dolor sit amet consectetur adipisicing elit..</h3>
+                    <a id="readMore" href="">Leer más</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="destacados">
+            <h1>Destacados</h1>
+            <div id="destacados_wrapper">
+                <button class="prev">&#8249;</button>
+
+                <div class="destacados_viewport">
+                    <div class="destacados_contenedor">
+                        <div class="tarjetaDestacado"><img src="recursos/img/placeholder.jpg" alt=""></div>
+                        <div class="tarjetaDestacado"><img src="recursos/img/placeholder.jpg" alt=""></div>
+                        <div class="tarjetaDestacado"><img src="recursos/img/placeholder.jpg" alt=""></div>
+                        <div class="tarjetaDestacado"><img src="recursos/img/placeholder.jpg" alt=""></div>
+                        <div class="tarjetaDestacado"><img src="recursos/img/placeholder.jpg" alt=""></div>
+                        <div class="tarjetaDestacado"><img src="recursos/img/placeholder.jpg" alt=""></div>
+                    </div>
+                </div>
+
+                <button class="next">&#8250;</button>
+            </div>
+        </div>
 
         <footer>
             <div id="redes">
@@ -175,7 +205,7 @@ a.button.delete { background-color: #f44336; }
             </div>
         </footer>
 
+        <script src="js/destacados.js"></script>
+        <script src="js/modooscuro.js"></script>
 </body>
 </html>
-
-<?php $conn->close(); ?>

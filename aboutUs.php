@@ -1,39 +1,5 @@
 <?php
-include 'conn.php';
 session_start();
-
-// Obtener los tipos de producto para llenar el <select>
-$tipos_query = "SELECT product_tipo_id, nombre FROM producto_tipo";
-$tipos_result = $conn->query($tipos_query);
-
-// Si el formulario fue enviado
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-    $product_tipo_id = $_POST['product_tipo_id'];
-    $nombre = $_POST['nombre'];
-    $description = $_POST['description'];
-    $price = $_POST['price'];
-    $stock = $_POST['stock'];
-
-    // Subir imagen correctamente
-    if (isset($_FILES['img']) && $_FILES['img']['error'] == 0) {
-        $imagen = file_get_contents($_FILES['img']['tmp_name']);
-
-        // Usamos prepared statement para insertar el producto
-        $stmt = $conn->prepare("INSERT INTO producto (product_tipo_id, nombre, description, price, stock, img) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("issdis", $product_tipo_id, $nombre, $description, $price, $stock, $imagen);
-
-        if ($stmt->execute()) {
-            echo "<p>✅ Producto agregado con éxito</p>";
-        } else {
-            echo "<p>❌ Error: " . $stmt->error . "</p>";
-        }
-
-        $stmt->close();
-    } else {
-        echo "<p>⚠️ Error al subir la imagen.</p>";
-    }
-}
 
 $rol = $_SESSION['rol'] ?? null;
 $nombre = $_SESSION['nombre'] ?? 'Invitado';
@@ -44,20 +10,18 @@ if (!empty($_SESSION['img'])) {
 } else {
     $userImage = 'recursos/img/placeholder.jpg'; // imagen por defecto
 }
-
-$conn->close();
 ?>
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link rel="stylesheet" href="css/headerFooter.css">
-    <link rel="stylesheet" href="css/create.css">
+    <link rel="stylesheet" href="css/AboutUs.css">
 
-    <title>Agregar Producto</title>
+    <title>Sobre nosostros</title>
 
     <style>
         #userIcon {
@@ -95,8 +59,9 @@ $conn->close();
         }
     </style>
 </head>
+
 <body>
-<header>
+    <header>
         <a href="index.php">
             <img id="logo_head" src="recursos/img/palceholder 2.svg" alt="Logo GameBox">
         </a>
@@ -135,45 +100,98 @@ $conn->close();
         </section>
     </header>
 
-<h2>Agregar Producto</h2>
+    <div id="contenido">
+        <div id="desarrollador1">
+            <div class="profile">
+                <img id="profile_img" src="recursos/img/placeholder.jpg" alt="">
+            </div> <br><br>
 
-<form action="create.php" method="POST" enctype="multipart/form-data">
+            <div class="frase">
+                <h3>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam ex atque animi, perferendis odit
+                    velit..</h3>
+            </div> <br><br>
 
-    <label>Tipo de producto:</label><br>
-    <select name="product_tipo_id" required>
-        <option value="">-- Selecciona un tipo --</option>
-        <?php
-        // Mostrar opciones de tipo de producto
-        if ($tipos_result->num_rows > 0) {
-            while ($tipo = $tipos_result->fetch_assoc()) {
-                echo "<option value='{$tipo['product_tipo_id']}'>{$tipo['nombre']}</option>";
-            }
-        } else {
-            echo "<option value=''>No hay tipos registrados</option>";
-        }
-        ?>
-    </select><br><br>
+            <div class="data">
+                <h3>Nombre</h3>
+                <h3>Trabajo dentro del proyecto</h3>
+            </div>
+        </div>
 
-    <label>Nombre:</label><br>
-    <input type="text" name="nombre" required><br><br>
+        <div id="desarrollador2">
+            <div class="profile">
+                <img id="profile_img" src="recursos/img/placeholder.jpg" alt="">
+            </div> <br><br>
 
-    <label>Descripción:</label><br>
-    <textarea name="description" required></textarea><br><br>
+            <div class="frase">
+                <h3>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam ex atque animi, perferendis odit
+                    velit..</h3>
+            </div> <br><br>
 
-    <label>Precio:</label><br>
-    <input type="number" step="0.01" name="price" required><br><br>
+            <div class="data">
+                <h3>Nombre</h3>
+                <h3>Trabajo dentro del proyecto</h3>
+            </div>
+        </div>
+    </div>
 
-    <label>Stock:</label><br>
-    <input type="number" name="stock" required><br><br>
+    <div id="FAQ">
+        <div id="title">
+            <h1>FAQ</h1>
+            <h2>Preguntas frecuentes hacía nosotros</h2>
+            <h2>-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            </h2>
+        </div>
 
-    <label>Imagen:</label><br>
-    <input type="file" name="img" accept="image/*" required><br><br>
+        <div class="preguntas">
+            <div class="question">
+                <h2>Lorem, ipsum dolor sit amet aut?</h2>
+                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Omnis excepturi hic tempora nulla, at culpa
+                    voluptatem earum, repellendus nihil et, ab accusantium beatae dicta fuga vitae? Eligendi, dolores
+                    est.
+                    Neque?</p>
+            </div>
 
-    <button type="submit">Guardar Producto</button>
-</form>
+            <div class="question">
+                <h2>Lorem, ipsum dolor sit amet aut?</h2>
+                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Omnis excepturi hic tempora nulla, at culpa
+                    voluptatem earum, repellendus nihil et, ab accusantium beatae dicta fuga vitae? Eligendi, dolores
+                    est.
+                    Neque?</p>
+            </div>
 
-<br>
-<a href="catalogo.php">Ver productos</a>
+            <div class="question">
+                <h2>Lorem, ipsum dolor sit amet aut?</h2>
+                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Omnis excepturi hic tempora nulla, at culpa
+                    voluptatem earum, repellendus nihil et, ab accusantium beatae dicta fuga vitae? Eligendi, dolores
+                    est.
+                    Neque?</p>
+            </div>
+
+            <div class="question">
+                <h2>Lorem, ipsum dolor sit amet aut?</h2>
+                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Omnis excepturi hic tempora nulla, at culpa
+                    voluptatem earum, repellendus nihil et, ab accusantium beatae dicta fuga vitae? Eligendi, dolores
+                    est.
+                    Neque?</p>
+            </div>
+
+            <div class="question">
+                <h2>Lorem, ipsum dolor sit amet aut?</h2>
+                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Omnis excepturi hic tempora nulla, at culpa
+                    voluptatem earum, repellendus nihil et, ab accusantium beatae dicta fuga vitae? Eligendi, dolores
+                    est.
+                    Neque?</p>
+            </div>
+
+            <div class="question">
+                <h2>Lorem, ipsum dolor sit amet aut?</h2>
+                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Omnis excepturi hic tempora nulla, at culpa
+                    voluptatem earum, repellendus nihil et, ab accusantium beatae dicta fuga vitae? Eligendi, dolores
+                    est.
+                    Neque?</p>
+            </div>
+        </div>
+    </div>
 
 <footer>
             <div id="redes">
@@ -206,4 +224,5 @@ $conn->close();
         </footer>
 
 </body>
+
 </html>
