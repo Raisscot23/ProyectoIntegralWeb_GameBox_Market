@@ -31,19 +31,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $stmt->close();
     } else {
-        echo "<p>⚠️ Error al subir la imagen.</p>";
+        echo "<p>Error al subir la imagen.</p>";
     }
 }
 
+ //---------------------------------------------------------------------Cargar imagen de usurio en el header
 $rol = $_SESSION['rol'] ?? null;
 $nombre = $_SESSION['nombre'] ?? 'Invitado';
 
-// ✅ Verificar si hay una imagen guardada en la sesión
+// Verificar si hay una imagen guardada en la sesión
 if (!empty($_SESSION['img'])) {
     $userImage = 'data:image/jpeg;base64,' . $_SESSION['img'];
 } else {
-    $userImage = 'recursos/img/placeholder.jpg'; // imagen por defecto
+    $userImage = 'recursos/img/NoImage.png'; // imagen por defecto
 }
+ //---------------------------------------------------------------------
 
 $conn->close();
 ?>

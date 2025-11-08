@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $_SESSION['nombre'] = $user['nombre'];
             $_SESSION['rol'] = $user['rol'];
 
-            // ✅ Guardamos la imagen desde la columna 'img' de tipo LONGBLOB
+            // Guardamos la imagen desde la columna 'img' de tipo LONGBLOB
             if (!empty($user['img'])) {
                 $_SESSION['img'] = base64_encode($user['img']);
             } else {

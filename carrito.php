@@ -1,5 +1,6 @@
 <?php
 include 'conn.php';
+ //---------------------------------------------------------------------Recordar la sesión inciada
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
@@ -9,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// 🔹 Obtener carrito del usuario
+// Obtener carrito del usuario
 $sql = "SELECT carrito_id FROM carrito WHERE user_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
@@ -25,7 +26,7 @@ if ($result->num_rows === 0) {
 $carrito = $result->fetch_assoc();
 $carrito_id = $carrito['carrito_id'];
 
-// 🔹 Aumentar / Disminuir / Eliminar producto
+// Aumentar / Disminuir / Eliminar producto
 if (isset($_POST['accion']) && isset($_POST['item_id'])) {
     $item_id = intval($_POST['item_id']);
 
@@ -52,18 +53,30 @@ if (isset($_POST['accion']) && isset($_POST['item_id'])) {
     exit();
 }
 
-// 🔹 Comprar (simulado)
+// Comprar
 if (isset($_POST['comprar'])) {
     $delete_items = "DELETE FROM carrito_items WHERE carrito_id = ?";
     $stmt_del = $conn->prepare($delete_items);
     $stmt_del->bind_param("i", $carrito_id);
     $stmt_del->execute();
 
-    echo "<script>alert('✅ Compra realizada con éxito. ¡Gracias por tu compra!'); window.location.href='catalogo.php';</script>";
+    echo "<script>alert('Compra realizada con éxito.'); window.location.href='carrito.php';</script>";
     exit();
 }
 
-// 🔹 Obtener productos del carrito
+
+// Vaciar carrito
+if (isset($_POST['vaciar'])) {
+    $vaciar_sql = "DELETE FROM carrito_items WHERE carrito_id = ?";
+    $stmt_vaciar = $conn->prepare($vaciar_sql);
+    $stmt_vaciar->bind_param("i", $carrito_id);
+    $stmt_vaciar->execute();
+
+    echo "<script>alert('Tu carrito ha sido vaciado.'); window.location.href='carrito.php';</script>";
+    exit();
+}
+
+// Obtener productos del carrito
 $sql_items = "SELECT ci.id AS item_id, ci.*, p.nombre, p.price, p.img 
               FROM carrito_items ci
               INNER JOIN producto p ON ci.product_id = p.product_id
@@ -73,11 +86,17 @@ $stmt_items->bind_param("i", $carrito_id);
 $stmt_items->execute();
 $result_items = $stmt_items->get_result();
 
+ //---------------------------------------------------------------------Cargar imagen de usurio en el header
 $rol = $_SESSION['rol'] ?? null;
 $nombre = $_SESSION['nombre'] ?? 'Invitado';
-$userImage = !empty($_SESSION['img'])
-    ? 'data:image/jpeg;base64,' . $_SESSION['img']
-    : 'recursos/img/placeholder.jpg';
+
+// Verificar si hay una imagen guardada en la sesión
+if (!empty($_SESSION['img'])) {
+    $userImage = 'data:image/jpeg;base64,' . $_SESSION['img'];
+} else {
+    $userImage = 'recursos/img/NoImage.png'; // imagen por defecto
+}
+ //---------------------------------------------------------------------
 ?>
 
 <!DOCTYPE html>
@@ -93,7 +112,6 @@ $userImage = !empty($_SESSION['img'])
             background: #f5f5f5;
             padding: 20px;
         }
-
         table {
             border-collapse: collapse;
             width: 100%;
@@ -102,26 +120,21 @@ $userImage = !empty($_SESSION['img'])
             border-radius: 10px;
             overflow: hidden;
         }
-
         th, td {
             padding: 12px;
             text-align: center;
             border-bottom: 1px solid #ddd;
         }
-
         th {
             background: #333;
             color: white;
         }
-
         tr:hover {
             background: #f2f2f2;
         }
-
         .acciones form {
             display: inline;
         }
-
         .acciones button {
             background-color: #007bff;
             color: white;
@@ -130,33 +143,36 @@ $userImage = !empty($_SESSION['img'])
             border-radius: 5px;
             cursor: pointer;
         }
-
         .acciones button:hover {
             background-color: #0056b3;
         }
-
         .btn-eliminar {
             background-color: #e74c3c;
         }
-
         .btn-eliminar:hover {
             background-color: #c0392b;
         }
-
-        .btn-comprar {
-            background-color: #27ae60;
-            color: white;
+        .btn-comprar, .btn-vaciar {
             padding: 10px 15px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            margin-top: 15px;
+            margin: 10px;
         }
-
+        .btn-comprar {
+            background-color: #27ae60;
+            color: white;
+        }
         .btn-comprar:hover {
             background-color: #1e8449;
         }
-
+        .btn-vaciar {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .btn-vaciar:hover {
+            background-color: #c0392b;
+        }
         #userIcon {
             width: 45px;
             height: 45px;
@@ -164,7 +180,6 @@ $userImage = !empty($_SESSION['img'])
             object-fit: cover;
             border: 2px solid #fff;
         }
-
         .logout-btn {
             background-color: #ff4040;
             color: white;
@@ -174,26 +189,21 @@ $userImage = !empty($_SESSION['img'])
             cursor: pointer;
             margin-left: 15px;
         }
-
         .logout-btn:hover {
             background-color: #cc0000;
         }
-
         .user-info {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-
         .user-name {
             font-weight: bold;
             color: white;
         }
-
         h1 {
             text-align: center;
         }
-
         .volver {
             display: inline-block;
             background-color: #555;
@@ -203,7 +213,6 @@ $userImage = !empty($_SESSION['img'])
             text-decoration: none;
             margin-top: 20px;
         }
-
         .volver:hover {
             background-color: #333;
         }
@@ -251,7 +260,7 @@ $userImage = !empty($_SESSION['img'])
 <?php if ($result_items->num_rows === 0): ?>
     <p>Tu carrito está vacío.</p>
 <?php else: ?>
-    <form method="POST">
+    <form method="POST" onsubmit="return confirmarCompra(event)">
         <table>
             <tr>
                 <th>Producto</th>
@@ -290,12 +299,22 @@ $userImage = !empty($_SESSION['img'])
         </table>
 
         <div style="text-align:center;">
-            <button type="submit" name="comprar" class="btn-comprar">💳 Comprar (simulado)</button>
+            <button type="submit" name="comprar" class="btn-comprar">💳 Comprar</button>
+            
+            
+            <!--Nuevo botón para vaciar el carrito -->
+            <button type="submit" name="vaciar" class="btn-vaciar" onclick="return confirmarVaciado()">🗑️ Vaciar carrito</button>
         </div>
     </form>
 <?php endif; ?>
 
 <a href="catalogo.php" class="volver">⬅ Volver al catálogo</a>
+
+<script>
+function confirmarVaciado() {
+    return confirm("¿Estás seguro de que quieres vaciar todo el carrito?");
+}
+</script>
 
 <footer>
     <div id="redes">
@@ -304,12 +323,10 @@ $userImage = !empty($_SESSION['img'])
             <li><a href=""><img src="recursos/icons/icons (1).webp" alt=""></a></li>
         </ul>
     </div>
-
     <div id="disclaimer">
         <h4>© 2025 GameBox Market | Todos los derechos reservados.</h4>
         <h4>Los diseños y productos que aparecen en el sitio pertenecen a sus respectivos creadores.</h4><br>
     </div>
-
     <h4>Si quieres conocer a los desarrolladores detrás del sitio,<a href="aboutUs.php"> haz click aquí</a></h4>
 </footer>
 

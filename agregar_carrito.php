@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $product_id = intval($_POST['product_id']);
     $cantidad = intval($_POST['cantidad']);
 
-    // 1️⃣ Buscar si el usuario ya tiene un carrito
+    // Buscar si el usuario ya tiene un carrito
     $sql = "SELECT carrito_id FROM carrito WHERE user_id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $user_id);
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $carrito_id = $stmt_insert->insert_id;
     }
 
-    // 2️⃣ Verificar si el producto ya está en el carrito
+    // Verificar si el producto ya está en el carrito
     $sql_check = "SELECT * FROM carrito_items WHERE carrito_id = ? AND product_id = ?";
     $stmt_check = $conn->prepare($sql_check);
     $stmt_check->bind_param("ii", $carrito_id, $product_id);
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt_insert_item->execute();
     }
 
-    // 3️⃣ Redirigir al carrito visual
+    // Redirigir al carrito visual
     header("Location: carrito.php");
     exit();
 }

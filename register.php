@@ -17,31 +17,48 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Validar que todos los campos estén llenos
     if (!empty($nombre) && !empty($apellido) && !empty($user_name) && !empty($email) && !empty($password) && !empty($phone) && !empty($address)) {
         
-        // Imagen (puede ser opcional)
+        // Imagen (opcional)
+        $imgData = null;
         if (isset($_FILES['img']) && $_FILES['img']['error'] === UPLOAD_ERR_OK) {
             $imgData = file_get_contents($_FILES['img']['tmp_name']);
-        } else {
-            $imgData = null;
         }
 
-        // Insertar usuario (prepared statement para evitar inyección SQL)
+        // Insertar usuario
         $sql = "INSERT INTO usuario (nombre, apellido, user_name, email, password, phone, address, img, rol)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssssssi", $nombre, $apellido, $user_name, $email, $password, $phone, $address, $imgData, $rol);
 
-        if ($stmt->execute()) {
-            // Redirigir automáticamente al index.php
-            echo "<script>
-                    alert('Usuario registrado correctamente (Rol: Cliente)');
+        if ($stmt) {
+            $stmt->bind_param("ssssssssi", $nombre, $apellido, $user_name, $email, $password, $phone, $address, $imgData, $rol);
+
+            if ($stmt->execute()) {
+                // Obtener el ID del usuario recién insertado
+                $nuevoUsuarioId = $stmt->insert_id;
+
+                // Iniciar sesión automáticamente
+                session_start();
+                $_SESSION['user_id'] = $nuevoUsuarioId;
+                $_SESSION['nombre'] = $nombre;
+                $_SESSION['apellido'] = $apellido;
+                $_SESSION['user_name'] = $user_name;
+                $_SESSION['email'] = $email;
+                $_SESSION['rol'] = $rol;
+                $_SESSION['img'] = $imgData ? base64_encode($imgData) : null;
+
+                // Redirigir al index.php con sesión activa
+                echo "<script>
+                    alert('Usuario registrado correctamente. Bienvenido, $nombre!');
                     window.location.href = 'index.php';
-                  </script>";
-            exit();
-        } else {
-            echo "Error al registrar: " . $stmt->error;
-        }
+                    </script>";
+                exit();
+            } else {
+                echo "Error al registrar: " . $stmt->error;
+            }
 
-        $stmt->close();
+            $stmt->close();
+        } else {
+            echo "Error en la preparación de la consulta: " . $conn->error;
+        }
     } else {
         echo "<script>alert('Por favor, completa todos los campos antes de continuar.');</script>";
     }
@@ -54,7 +71,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Usuario</title>
-    
 </head>
 <body>
 
@@ -69,11 +85,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <input type="text" name="phone" placeholder="Teléfono" required><br>
     <input type="text" name="address" placeholder="Dirección" required><br>
 
-    <label for="img">Imagen de usuario:</label>
+    <label for="img">Imagen de usuario (opcional):</label>
     <input type="file" name="img" accept="image/*"><br><br>
 
     <button type="submit">Registrar</button>
-    <a href="index.php">Vovle a la pantalla de inicio</a>
+    <a href="index.php">Volver a la pantalla de inicio</a>
 </form>
 
 </body>

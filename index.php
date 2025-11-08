@@ -1,15 +1,18 @@
 <?php
+ //---------------------------------------------------------------------Recordar la sesión inciada
 session_start();
 
+ //---------------------------------------------------------------------Cargar imagen de usurio en el header
 $rol = $_SESSION['rol'] ?? null;
 $nombre = $_SESSION['nombre'] ?? 'Invitado';
 
-// ✅ Verificar si hay una imagen guardada en la sesión
+// Verificar si hay una imagen guardada en la sesión
 if (!empty($_SESSION['img'])) {
     $userImage = 'data:image/jpeg;base64,' . $_SESSION['img'];
 } else {
-    $userImage = 'recursos/img/placeholder.jpg'; // imagen por defecto
+    $userImage = 'recursos/img/NoImage.png'; // imagen por defecto
 }
+ //---------------------------------------------------------------------
 ?>
 
 <!DOCTYPE html>
@@ -67,21 +70,26 @@ if (!empty($_SESSION['img'])) {
 
         <section id="menu_head">
             <ul>
+                <!-- El nav, cambiará en caso de tener una sesión iniciada, como cliente o administrador -->
                 <?php if ($rol == 1): // Mostrar CRUD solo si el usuario es administrador ?>
                     <li><a href="create.php">CRUD</a></li>
                 <?php endif; ?>
+                <!-- ------------------------------------------------------------------------------------ -->
 
                 <li><a href="catalogo.php">Catálogo</a></li>
 
 
                 <li>
+                    <!-- En caso de no tener una sesión iniciada el btn "carrito" será redirigido al login.php -->
                     <?php if ($rol): ?>
                         <a href="carrito.php">Carrito de compras</a>
                     <?php else: ?>
                         <a href="login.php"">Carrito de compras</a>
                     <?php endif; ?>
+                    <!-- ------------------------------------------------------------------------------------ -->
                 </li>
                 
+                <!-- Carga la información de la cuenta como su imagen de perfil y su nombre de usuario -->
                 <li class="user-info">
                     <?php if ($rol): ?>
                         <a href="userProfile.php">
@@ -95,11 +103,12 @@ if (!empty($_SESSION['img'])) {
                         <a href="login.php" class="logout-btn" style="background-color:#007bff;">Iniciar sesión</a>
                     <?php endif; ?>
                 </li>
+                <!-- ------------------------------------------------------------------------------------ -->
             </ul>
         </section>
+
     </header>
 
-    <!-- CONTENIDO PRINCIPAL -->
     <div id="contenido">
         <div id="promociones">
             <h1>Promociones</h1>
