@@ -1,7 +1,302 @@
-*{
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+/* === RESET === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/*----------------------------------------*/
+/* === VARIABLES DE COLOR === */
+:root {
+  --color-primario: #0071bc;
+  --color-secundario: #00b1cd;
+  --color-acento: #ef781c;
+  --color-complementario: #f3ad35;
+  --color-fondo: #ececec;
+  --color-texto: #000000;
+  --color-card: #ffffff;
+  --color-borde: #dcdcdc;
+  --color-overlay: rgba(255,255,255,0.96);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primario: #00b1cd;
+    --color-secundario: #0071bc;
+    --color-acento: #ef781c;
+    --color-complementario: #f3ad35;
+    --color-fondo: #0b0f13;
+    --color-texto: #e6edf3;
+    --color-card: #0f1418;
+    --color-borde: #1f2a33;
+    --color-overlay: rgba(8,12,16,0.88);
+  }
+}
+
+/* === BASE === */
+body {
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* === TARJETA GENERAL PERFIL === */
+.profile-container {
+  width: 92%;
+  max-width: 1000px;
+  margin: 100px auto;
+  background: var(--color-card);
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 45px 50px;
+  animation: fadeIn 0.6s ease;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--color-borde);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === TÍTULO === */
+.profile-container h1 {
+  color: var(--color-primario);
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 25px;
+  border-bottom: 3px solid var(--color-secundario);
+  padding-bottom: 10px;
+  display: inline-block;
+}
+
+/* === LAYOUT GENERAL PERFIL === */
+.profile-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 35px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  background: var(--color-card);
+  border: 1px solid var(--color-borde);
+  border-radius: 14px;
+  padding: 30px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+}
+
+/* === FORMULARIO === */
+.profile-form {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 35px;
+  flex-wrap: wrap;
+}
+
+.form-section {
+  flex: 1;
+  min-width: 320px;
+}
+
+/* === CAMPOS DE FORMULARIO === */
+form label {
+  font-weight: 600;
+  color: var(--color-primario);
+  display: block;
+  margin-bottom: 4px;
+  text-align: left;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--color-borde);
+  background-color: var(--color-card);
+  color: var(--color-texto);
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  margin-bottom: 10px;
+}
+
+form input:focus,
+form textarea:focus {
+  border-color: var(--color-secundario);
+  box-shadow: 0 0 5px rgba(0,177,205,0.3);
+  outline: none;
+}
+
+form textarea {
+  resize: none;
+  min-height: 70px;
+}
+
+/* === VISTA PREVIA FOTO === */
+.profile-preview {
+  width: 260px;
+  background-color: var(--color-card);
+  border: 1px solid var(--color-borde);
+  border-radius: 14px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.profile-preview h3 {
+  color: var(--color-primario);
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.profile-pic {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 10px auto;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--color-secundario);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.profile-pic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* === INPUT DE IMAGEN === */
+.upload-label {
+  display: block;
+  font-weight: 600;
+  color: var(--color-primario);
+  margin-top: 10px;
+}
+
+input[type="file"] {
+  margin-top: 8px;
+  border: none;
+  background: transparent;
+  color: var(--color-texto);
+}
+
+/* === BOTÓN GUARDAR === */
+.Update-Profile {
+  margin-top: 20px;
+  margin-bottom: 2%;
+  width: 100%;
+  padding: 12px 0;
+  border: none;
+  border-radius: 12px;
+  background-color: var(--color-acento);
+  color: var(--color-card);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 16px rgba(239, 120, 28, 0.25);
+}
+
+.Update-Profile:hover {
+  background-color: var(--color-complementario);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(243,173,53,0.35);
+}
+
+/* === ENLACE VOLVER === */
+.volver {
+  display: inline-block;
+  margin-top: 8px;
+  text-align: center;
+  color: var(--color-primario);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.volver:hover {
+  color: var(--color-acento);
+  transform: scale(1.05);
+}
+
+/* === POPUP === */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(20, 20, 20, 0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(3px);
+}
+
+.popup-content {
+  background: var(--color-card);
+  color: var(--color-texto);
+  padding: 25px 35px;
+  border-radius: 16px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  animation: fadeInPopup 0.3s ease;
+  max-width: 350px;
+}
+
+.popup-content h3 {
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+  color: var(--color-texto);
+  font-weight: 600;
+}
+
+#closePopup {
+  background-color: var(--color-complementario);
+  color: var(--color-card);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.25s ease;
+}
+
+#closePopup:hover {
+  background-color: var(--color-acento);
+}
+
+@keyframes fadeInPopup {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 800px) {
+  .profile-form {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profile-preview {
+    width: 100%;
+  }
+
+  .profile-pic {
+    width: 160px;
+    height: 160px;
+  }
+
+  .profile-container {
+    padding: 25px 20px;
+  }
+
+  .profile-container h1 {
+    font-size: 1.6rem;
+  }
+}

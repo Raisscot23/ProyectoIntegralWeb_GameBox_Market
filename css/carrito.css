@@ -1,7 +1,281 @@
-*{
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+/* === RESET === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/*----------------------------------------*/
+/* === VARIABLES DE COLOR === */
+:root {
+  --color-primario: #0071bc;
+  --color-secundario: #00b1cd;
+  --color-acento: #ef781c;
+  --color-complementario: #f3ad35;
+  --color-fondo: #ececec;
+  --color-texto: #000000;
+  --color-card: #ffffff;
+  --color-borde: #dcdcdc;
+  --color-overlay: rgba(255,255,255,0.96);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primario: #00b1cd;
+    --color-secundario: #0071bc;
+    --color-acento: #ef781c;
+    --color-complementario: #f3ad35;
+    --color-fondo: #0b0f13;
+    --color-texto: #e6edf3;
+    --color-card: #0f1418;
+    --color-borde: #1f2a33;
+  }
+}
+
+/* === BASE === */
+body {
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* === CONTENEDOR PRINCIPAL === */
+.cart-container {
+  width: 92%;
+  max-width: 1100px;
+  margin: 0 auto;
+  margin-top: 40px;
+  margin-bottom: 60px;
+  background: var(--color-card);
+  border-radius: 16px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+  padding: 35px 30px;
+  overflow-x: auto;
+  animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === TÍTULO === */
+.cart-container h2 {
+  text-align: center;
+  color: var(--color-primario);
+  font-weight: 700;
+  font-size: 1.8rem;
+  margin-bottom: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 3px solid var(--color-secundario);
+  padding-bottom: 10px;
+}
+
+/* === TABLA === */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+thead {
+  background-color: var(--color-primario);
+  color: #fff;
+  font-weight: 600;
+}
+
+th, td {
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--color-borde);
+  vertical-align: middle;
+}
+
+tbody tr:nth-child(even) {
+  background-color: rgba(0, 177, 205, 0.05);
+}
+
+tbody tr:hover {
+  background-color: rgba(0, 177, 205, 0.12);
+  transition: background 0.2s ease;
+}
+
+/* === IMÁGENES DE PRODUCTO === */
+.cart-item-img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid var(--color-borde);
+  transition: transform 0.2s ease;
+}
+
+.cart-item-img:hover {
+  transform: scale(1.05);
+}
+
+/* === BOTONES DE ACCIÓN === */
+.action-btn {
+  border: none;
+  background: transparent;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-btn img {
+  width: 22px;
+  height: 22px;
+  filter: brightness(0) saturate(100%) invert(54%) sepia(83%) saturate(2040%) hue-rotate(360deg) brightness(98%) contrast(95%);
+  transition: filter 0.25s ease;
+}
+
+/* Hover general (para todos los botones) */
+.action-btn:hover {
+  transform: scale(1.15);
+  background-color: rgba(0, 177, 205, 0.08);
+}
+
+/* Hover: cambia el color del icono */
+.action-btn:hover img {
+  filter: brightness(0) saturate(100%) invert(38%) sepia(83%) saturate(2594%) hue-rotate(176deg) brightness(95%) contrast(96%);
+}
+
+/* Botón eliminar (rojo/naranja) */
+.action-btn.delete img {
+  filter: brightness(100%) saturate(100%) invert(54%) sepia(93%) saturate(1890%) hue-rotate(346deg) brightness(96%) contrast(93%);
+}
+
+.action-btn.delete:hover img {
+  filter: brightness(0) saturate(100%) invert(70%) sepia(63%) saturate(1283%) hue-rotate(360deg) brightness(100%) contrast(97%);
+}
+
+/* === MODO OSCURO === */
+@media (prefers-color-scheme: dark) {
+  .action-btn:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .action-btn img {
+    filter: brightness(0) saturate(100%) invert(77%) sepia(53%) saturate(388%) hue-rotate(157deg) brightness(95%) contrast(92%);
+  }
+
+  .action-btn.delete img {
+    filter: brightness(0) saturate(100%) invert(77%) sepia(24%) saturate(1547%) hue-rotate(348deg) brightness(100%) contrast(95%);
+  }
+}
+
+
+/* === TOTAL Y BOTONES FINALES === */
+tfoot td {
+  font-weight: 700;
+  color: var(--color-primario);
+  font-size: 1.1rem;
+}
+
+.cart-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 25px;
+  flex-wrap: wrap;
+}
+
+.btn-primary, .btn-danger {
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  color: var(--color-card);
+  font-size: 1rem;
+}
+
+.btn-primary {
+  background-color: var(--color-acento);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-complementario);
+  transform: translateY(-3px);
+}
+
+.btn-danger {
+  background-color: #dc3545;
+}
+
+.btn-danger:hover {
+  background-color: #b02a37;
+  transform: translateY(-3px);
+}
+
+/* === ENLACE VOLVER AL CATÁLOGO === */
+.VerProductos {
+  display: block;
+  text-align: center;
+  margin-top: 25px;
+  background-color: var(--color-primario);
+  color: var(--color-card);
+  font-weight: 600;
+  padding: 12px 25px;
+  border-radius: 10px;
+  text-decoration: none;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  transition: all 0.3s ease;
+}
+
+.VerProductos:hover {
+  background-color: var(--color-secundario);
+  transform: scale(1.05);
+  color: var(--color-card);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  th, td {
+    padding: 10px 6px;
+    font-size: 0.9rem;
+  }
+
+  .cart-container {
+    padding: 20px;
+  }
+
+  .btn-primary, .btn-danger {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+  }
+
+  .cart-item-img {
+    width: 55px;
+    height: 55px;
+  }
+}
+
+/* === ANIMACIÓN DE ENTRADA GLOBAL === */
+body {
+  opacity: 0;
+  animation: fadeInBody 0.8s ease forwards;
+}
+
+@keyframes fadeInBody {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

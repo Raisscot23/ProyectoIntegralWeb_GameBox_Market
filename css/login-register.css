@@ -1,0 +1,210 @@
+/* === RESET === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* === VARIABLES DE COLOR === */
+:root {
+  --color-primario: #0071bc;
+  --color-secundario: #00b1cd;
+  --color-acento: #ef781c;
+  --color-complementario: #f3ad35;
+  --color-fondo: #ececec;
+  --color-texto: #000000;
+  --color-card: #ffffff;
+  --color-borde: #dcdcdc;
+}
+
+/* === MODO OSCURO === */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primario: #00b1cd;
+    --color-secundario: #0071bc;
+    --color-acento: #ef781c;
+    --color-complementario: #f3ad35;
+    --color-fondo: #0b0f13;
+    --color-texto: #e6edf3;
+    --color-card: #0f1418;
+    --color-borde: #1f2a33;
+  }
+}
+
+/* === BASE === */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+/* === CONTENEDOR GENERAL === */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* === TARJETA === */
+.auth-card {
+  background: var(--color-card);
+  border-radius: 18px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.08);
+  padding: 40px 50px;
+  border: 1px solid var(--color-borde);
+  width: 90%;
+  max-width: 450px;
+  text-align: center;
+  animation: fadeIn 0.6s ease;
+}
+
+.auth-card.large {
+  max-width: 950px;
+}
+
+/* === TÍTULO === */
+.auth-card h1 {
+  color: var(--color-primario);
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 25px;
+}
+
+/* === FORMULARIO === */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.auth-form.two-columns {
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 40px;
+  text-align: left;
+}
+
+.form-section {
+  flex: 1;
+  min-width: 300px;
+}
+
+/* === CAMPOS === */
+.auth-form label {
+  color: var(--color-primario);
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.auth-form input,
+.auth-form textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--color-borde);
+  background: var(--color-card);
+  color: var(--color-texto);
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.auth-form input:focus,
+.auth-form textarea:focus {
+  border-color: var(--color-secundario);
+  box-shadow: 0 0 6px rgba(0,177,205,0.3);
+  outline: none;
+}
+
+/* === BOTÓN === */
+.btn-primary {
+  background-color: var(--color-acento);
+  color: var(--color-card);
+  border: none;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  margin-bottom: 4%;
+  box-shadow: 0 6px 16px rgba(239,120,28,0.25);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-complementario);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(243,173,53,0.35);
+}
+
+/* === LINKS === */
+.link, .volver-link {
+  color: var(--color-secundario);
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 2%;
+  transition: color 0.2s ease;
+}
+
+.link:hover, .volver-link:hover {
+  color: var(--color-acento);
+}
+
+/* === PREVISUALIZACIÓN === */
+.profile-preview {
+  width: 260px;
+  background: var(--color-card);
+  border: 1px solid var(--color-borde);
+  border-radius: 14px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.profile-preview h3 {
+  color: var(--color-primario);
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.profile-pic {
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 10px auto;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--color-secundario);
+}
+
+.profile-pic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.upload-label {
+  display: block;
+  font-weight: 600;
+  color: var(--color-primario);
+  margin-top: 10px;
+}
+
+/* === ANIMACIÓN === */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 800px) {
+  .auth-form.two-columns {
+    flex-direction: column;
+    align-items: center;
+  }
+  .profile-preview {
+    width: 100%;
+  }
+}

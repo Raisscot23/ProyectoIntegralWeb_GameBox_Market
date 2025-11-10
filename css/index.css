@@ -1,307 +1,356 @@
-/* ======= VARIABLES GLOBALES ======= */
-:root {
-  --color-bg: #f7f9fc;
-  --color-card: #ffffff;
-  --color-text: #1a1a1a;
-  --color-accent: #0096c7;
-  --color-accent-light: #00b4d8;
-  --color-border: #e0e0e0;
+/* === RESET === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* ======= MODO OSCURO AUTOMÁTICO ======= */
+/* === PALETA DE COLORES === */
+:root {
+  --color-primario: #0071bc;
+  --color-secundario: #00b1cd;
+  --color-acento: #ef781c;
+  --color-complementario: #f3ad35;
+  --color-fondo: #ececec;
+  --color-texto: #000000;
+  --color-card: #ffffff;
+  --color-borde: #dcdcdc;
+  --color-overlay: rgba(255, 255, 255, 0.96);
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg: #0d1117;
-    --color-card: #161b22;
-    --color-text: #e6edf3;
-    --color-accent: #00b4d8;
-    --color-accent-light: #48cae4;
-    --color-border: #30363d;
+    --color-primario: #00b1cd;
+    --color-secundario: #0071bc;
+    --color-acento: #ef781c;
+    --color-complementario: #f3ad35;
+    --color-fondo: #0b0f13;
+    --color-texto: #e6edf3;
+    --color-card: #0f1418;
+    --color-borde: #1f2a33;
+    --color-overlay: rgba(8, 12, 16, 0.88);
   }
 }
 
-/* ======= RESETEO BÁSICO ======= */
+/* === ESTILOS GENERALES === */
 body {
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  font-family: "Poppins", "Segoe UI", sans-serif;
-  margin: 0;
-  padding: 0;
-  transition: background-color 0.3s, color 0.3s;
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  opacity: 0;
+  animation: fadeInBody 0.8s ease forwards;
 }
 
-/* ======= ENCABEZADO ======= */
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  border-bottom: 1px solid var(--color-border);
-  background-color: var(--color-card);
-  position: sticky;
+@keyframes fadeInBody {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* === HERO === */
+.hero {
+  background-image: url("../recursos/img/fondo.jpg");
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  color: var(--color-fondo);
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
   top: 0;
-  z-index: 100;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(188, 69, 0, 0.74);
+  z-index: 1;
 }
 
-#logo_head {
-  height: 48px;
-  cursor: pointer;
+.hero * {
+  position: relative;
+  z-index: 2;
 }
 
-#menu_head ul {
-  list-style: none;
-  display: flex;
-  gap: 1.5rem;
-  margin: 0;
-  padding: 0;
+.hero-logo {
+  width: 10%;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.6))
+          drop-shadow(0 0 10px var(--color-primario));
+  opacity: 0;
+  transform: scale(0.9);
+  animation: fadeInLogo 1.2s ease forwards;
 }
 
-#menu_head a {
+@keyframes fadeInLogo {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.hero h1 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+  animation: fadeInText 1.5s ease forwards;
+}
+
+.hero p {
+  font-size: 1.1em;
+  margin-bottom: 30px;
+  animation: fadeInText 1.8s ease forwards;
+}
+
+.hero-btn {
+  background: var(--color-primario);
+  color: white;
+  padding: 12px 25px;
+  border-radius: 25px;
   text-decoration: none;
-  color: var(--color-text);
-  font-weight: 500;
-  transition: color 0.2s;
+  transition: 0.3s;
+  animation: fadeInText 2s ease forwards;
 }
 
-#menu_head a:hover {
-  color: var(--color-accent);
+.hero-btn:hover {
+  background: var(--color-complementario);
 }
 
-/* ======= CONTENIDO PRINCIPAL ======= */
-#contenido {
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+@keyframes fadeInText {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* ======= SECCIÓN: PROMOCIONES ======= */
-#promociones h1,
-#recientes h1,
-#destacados h1 {
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
-  border-left: 5px solid var(--color-accent);
-  padding-left: 10px;
-}
-
-.promociones_contenedor {
+/* === SECCIÓN DE BIENVENIDA === */
+.bienvenida {
   display: flex;
-  gap: 1rem;
+  justify-content: center;
+  padding: 50px 20px;
+}
+.bienvenida-card {
+  background: var(--color-card);
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 25px;
+  max-width: 800px;
+  width: 100%;
+}
+.bienvenida-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--color-primario);
+}
+.bienvenida-texto h2 {
+  color: var(--color-primario);
+  margin-bottom: 10px;
+}
+.bienvenida-texto p {
+  margin-bottom: 15px;
+  line-height: 1.4;
+}
+.btn-perfil {
+  background: var(--color-primario);
+  color: white;
+  padding: 10px 18px;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+.btn-perfil:hover {
+  background: var(--color-complementario);
+}
+
+/* === PRODUCTOS DESTACADOS === */
+.destacados {
+  padding: 50px 20px;
+  text-align: center;
+}
+.destacados h2 {
+  color: var(--color-primario);
+  margin-bottom: 30px;
+}
+.product-preview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.product-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-borde);
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  padding: 15px;
+  transition: transform 0.2s ease;
+}
+.product-card:hover {
+  transform: translateY(-5px);
+}
+.product-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.product-card .info {
+  margin-top: 10px;
+}
+.product-card h3 {
+  font-size: 1.1em;
+  margin-bottom: 5px;
+}
+.product-card span {
+  font-weight: bold;
+  color: var(--color-acento);
+}
+.ver-mas {
+  display: inline-block;
+  margin-top: 30px;
+  background: var(--color-primario);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+.ver-mas:hover {
+  background: var(--color-secundario);
+}
+
+/* === ARTÍCULOS RECIENTES === */
+.recientes {
+  padding: 50px 20px;
+  text-align: center;
+  background-color: var(--color-overlay);
+  backdrop-filter: blur(6px);
+  position: relative;
+  overflow: hidden;
+}
+
+.recientes h2 {
+  color: var(--color-primario);
+  margin-bottom: 30px;
+}
+
+/* === CONTENEDOR DEL CARRUSEL === */
+.carousel-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 1100px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+/* === CARRUSEL === */
+.carousel {
+  display: flex;
+  gap: 20px;
   overflow-x: auto;
   scroll-behavior: smooth;
-  padding-bottom: 1rem;
+  scrollbar-width: none; /* Oculta scrollbar en Firefox */
+  -ms-overflow-style: none; /* Oculta scrollbar en IE */
 }
 
-.tarjetaPromocion {
-  background-color: var(--color-card);
-  border: 1px solid var(--color-border);
+.carousel::-webkit-scrollbar {
+  display: none; /* Oculta scrollbar en Chrome/Safari */
+}
+
+.carousel .product-card {
+  flex: 0 0 auto;
+  width: 240px;
+  background: var(--color-card);
+  border: 1px solid var(--color-borde);
   border-radius: 12px;
-  min-width: 250px;
-  text-align: center;
-  padding: 1rem;
-  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.tarjetaPromocion:hover {
+.carousel .product-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.tarjetaPromocion img {
+.carousel .product-card img {
   width: 100%;
-  border-radius: 8px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
 }
 
-.tarjetaPromocion h3 {
-  margin: 0.8rem 0;
-  font-size: 1.1rem;
+.carousel .info {
+  margin-top: 10px;
 }
 
-.tarjetaPromocion button {
-  background-color: var(--color-accent);
-  border: none;
-  color: white;
-  padding: 0.6rem 1.2rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.3s;
+.carousel .info h3 {
+  font-size: 1.1em;
+  margin-bottom: 5px;
 }
 
-.tarjetaPromocion button:hover {
-  background-color: var(--color-accent-light);
+.carousel .info span {
+  font-weight: bold;
+  color: var(--color-acento);
 }
 
-.tarjetaPromocion a {
-  color: white;
-  text-decoration: none;
-}
-
-/* ======= SECCIÓN: RECIENTES ======= */
-.tarjetasRecientesWrapper {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1.5rem;
-}
-
-.tarjetaReciente {
-  background-color: var(--color-card);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  padding: 1rem;
-  text-align: center;
-  transition: box-shadow 0.2s;
-}
-
-.tarjetaReciente:hover {
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-}
-
-.tarjetaReciente img {
-  width: 100%;
-  border-radius: 8px;
-  margin-bottom: 0.5rem;
-}
-
-#readMore {
-  color: var(--color-accent);
-  text-decoration: none;
-  font-weight: 500;
-}
-
-#readMore:hover {
-  text-decoration: underline;
-}
-
-/* ======= SECCIÓN: DESTACADOS ======= */
-#destacados_wrapper {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  width: 100%;
-  justify-content: center;
-}
-
-.destacados_viewport {
-  overflow: hidden;
-  flex: 1;
-  max-width: 1200px; /* límite máximo */
-}
-
-.destacados_contenedor {
-  display: flex;
-  gap: 1.5rem;
-  transition: transform 0.5s ease;
-}
-
-/* Tarjetas más grandes y adaptables */
-.tarjetaDestacado {
-  flex: 0 0 300px; /* tamaño base */
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  background-color: #fff;
-}
-
-/* Imagen sin deformarse (mantiene proporción) */
-.tarjetaDestacado img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover; /* mantiene proporciones sin deformar */
-  display: block;
-}
-
-/* Botones */
-.prev, .next {
-  background-color: var(--color-accent);
+/* === BOTONES DEL CARRUSEL === */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--color-primario);
   color: white;
   border: none;
-  font-size: 1.5rem;
-  padding: 0.6rem 1rem;
   border-radius: 50%;
+  width: 40px;
+  height: 40px;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
+  z-index: 2;
+  transition: background-color 0.3s;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-.prev:hover, .next:hover {
-  background-color: var(--color-accent-light);
-  transform: scale(1.1);
+.carousel-btn:hover {
+  background-color: var(--color-acento);
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-  .tarjetaDestacado {
-    flex: 0 0 260px;
-  }
-  .tarjetaDestacado img {
-    height: 180px;
-  }
+.carousel-btn.left {
+  left: 10px;
+}
+
+.carousel-btn.right {
+  right: 10px;
 }
 
 @media (max-width: 768px) {
-  .tarjetaDestacado {
-    flex: 0 0 220px;
-  }
-  .tarjetaDestacado img {
-    height: 160px;
-  }
-}
-
-@media (max-width: 480px) {
-  .tarjetaDestacado {
-    flex: 0 0 180px;
-  }
-  .tarjetaDestacado img {
-    height: 140px;
-  }
-}
-
-/* ======= FOOTER ======= */
-footer {
-  background-color: var(--color-card);
-  border-top: 1px solid var(--color-border);
-  text-align: center;
-  padding: 2rem 1rem;
-  margin-top: 3rem;
-  font-size: 0.9rem;
-  color: var(--color-text);
-}
-
-#redes ul {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  padding: 0;
-  list-style: none;
-}
-
-#redes img {
-  width: 28px;
-  height: 28px;
-  transition: transform 0.2s;
-}
-
-#redes img:hover {
-  transform: scale(1.1);
-}
-
-/* ======= RESPONSIVE ======= */
-@media (max-width: 768px) {
-  header {
-    flex-direction: column;
-    gap: 1rem;
+  .carousel-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9em;
   }
 
-  #menu_head ul {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  #destacos_Wrapper {
-    flex-direction: column;
-  }
-
-  .prev, .next {
-    display: none;
+  .carousel .product-card {
+    width: 180px;
   }
 }
