@@ -3,10 +3,9 @@ include 'conn.php';
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $user_input = trim($_POST['user_input']); // puede ser nombre de usuario o correo
+    $user_input = trim($_POST['user_input']);
     $password = trim($_POST['password']); 
 
-    // Buscar usuario por nombre o correo
     $sql = "SELECT * FROM usuario WHERE user_name = ? OR email = ? LIMIT 1";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ss", $user_input, $user_input);
@@ -16,19 +15,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($result && $result->num_rows > 0) {
         $user = $result->fetch_assoc();
 
-        // Comparar directamente las contraseñas (texto plano)
-        if ($password === $user['password']) {
-            // Guardar los datos de sesión
+        // --- Verificar contraseña encriptada ---
+        if (password_verify($password, $user['password'])) {
             $_SESSION['user_id'] = $user['user_id'];
             $_SESSION['nombre'] = $user['nombre'];
             $_SESSION['rol'] = $user['rol'];
-
-            // Guardamos la imagen desde la columna 'img' de tipo LONGBLOB
-            if (!empty($user['img'])) {
-                $_SESSION['img'] = base64_encode($user['img']);
-            } else {
-                $_SESSION['img'] = null;
-            }
+            $_SESSION['img'] = !empty($user['img']) ? base64_encode($user['img']) : null;
 
             echo "<script>window.location.href='index.php';</script>";
             exit();
@@ -43,29 +35,31 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - GameBoxMarket</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar Sesión - GameBoxMarket</title>
+  <link rel="stylesheet" href="css/login-register.css">
 </head>
 <body>
-    <div class="form-container">
-        <h2>Iniciar Sesión</h2>
-        <form method="POST" action="">
-            <label>Usuario o Correo:</label>
-            <input type="text" name="user_input" required>
+  <div class="auth-container">
+    <div class="auth-card">
+      <h1>Iniciar Sesión</h1>
+      <form method="POST" action="" class="auth-form">
+        <label for="user_input">Usuario o Correo:</label>
+        <input type="text" id="user_input" name="user_input" placeholder="Ingresa tu usuario o correo" required>
 
-            <label>Contraseña:</label>
-            <input type="password" name="password" required>
+        <label for="password">Contraseña:</label>
+        <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required>
 
-            <button type="submit">Ingresar</button>
-        </form>
-        <p>¿No tienes una cuenta? <a href="register.php">Regístrate aquí</a></p>
-        <a href="index.php">Vovle a la pantalla de inicio</a>
+        <button type="submit" class="btn-primary">Ingresar</button>
+      </form>
+
+      <p class="auth-text">¿No tienes una cuenta? <a href="register.php" class="link">Regístrate aquí</a></p>
+      <a href="index.php" class="volver-link">Volver al inicio</a>
     </div>
+  </div>
 </body>
 </html>

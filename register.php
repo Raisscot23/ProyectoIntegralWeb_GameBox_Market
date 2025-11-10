@@ -1,7 +1,6 @@
 <?php
 include 'conn.php';
 
-// Si se envió el formulario
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $nombre = trim($_POST['nombre']);
     $apellido = trim($_POST['apellido']);
@@ -10,57 +9,45 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $password = trim($_POST['password']);
     $phone = trim($_POST['phone']);
     $address = trim($_POST['address']);
+    $rol = 2; // Rol por defecto: cliente
 
-    // Rol por defecto: Cliente
-    $rol = 2;
-
-    // Validar que todos los campos estén llenos
     if (!empty($nombre) && !empty($apellido) && !empty($user_name) && !empty($email) && !empty($password) && !empty($phone) && !empty($address)) {
-        
-        // Imagen (opcional)
+
+        // --- Hashear contraseña ---
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        // --- Imagen opcional ---
         $imgData = null;
         if (isset($_FILES['img']) && $_FILES['img']['error'] === UPLOAD_ERR_OK) {
             $imgData = file_get_contents($_FILES['img']['tmp_name']);
         }
 
-        // Insertar usuario
+        // --- Insertar usuario ---
         $sql = "INSERT INTO usuario (nombre, apellido, user_name, email, password, phone, address, img, rol)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
 
         if ($stmt) {
-            $stmt->bind_param("ssssssssi", $nombre, $apellido, $user_name, $email, $password, $phone, $address, $imgData, $rol);
+            $stmt->bind_param("ssssssssi", $nombre, $apellido, $user_name, $email, $hashedPassword, $phone, $address, $imgData, $rol);
 
             if ($stmt->execute()) {
-                // Obtener el ID del usuario recién insertado
-                $nuevoUsuarioId = $stmt->insert_id;
-
-                // Iniciar sesión automáticamente
                 session_start();
-                $_SESSION['user_id'] = $nuevoUsuarioId;
+                $_SESSION['user_id'] = $stmt->insert_id;
                 $_SESSION['nombre'] = $nombre;
-                $_SESSION['apellido'] = $apellido;
-                $_SESSION['user_name'] = $user_name;
-                $_SESSION['email'] = $email;
                 $_SESSION['rol'] = $rol;
                 $_SESSION['img'] = $imgData ? base64_encode($imgData) : null;
 
-                // Redirigir al index.php con sesión activa
-                echo "<script>
-                    alert('Usuario registrado correctamente. Bienvenido, $nombre!');
-                    window.location.href = 'index.php';
-                    </script>";
+                echo "<script>alert('Usuario registrado correctamente. Bienvenido, $nombre!'); window.location.href='index.php';</script>";
                 exit();
             } else {
-                echo "Error al registrar: " . $stmt->error;
+                echo "<script>alert('Error al registrar usuario.');</script>";
             }
-
             $stmt->close();
         } else {
-            echo "Error en la preparación de la consulta: " . $conn->error;
+            echo "<script>alert('Error en la preparación de la consulta.');</script>";
         }
     } else {
-        echo "<script>alert('Por favor, completa todos los campos antes de continuar.');</script>";
+        echo "<script>alert('Por favor, completa todos los campos.');</script>";
     }
 }
 ?>
@@ -68,29 +55,67 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrar Usuario</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registrar Usuario - GameBoxMarket</title>
+  <link rel="stylesheet" href="css/login-register.css">
 </head>
 <body>
+  <div class="auth-container">
+    <div class="auth-card large">
+      <h1>Crear Cuenta</h1>
+      <form method="POST" enctype="multipart/form-data" class="auth-form two-columns" id="registerForm">
+        <div class="form-section">
+          <label>Nombre:</label>
+          <input type="text" name="nombre" required>
 
-<h2>Registrar Usuario</h2>
+          <label>Apellido:</label>
+          <input type="text" name="apellido" required>
 
-<form method="POST" action="" enctype="multipart/form-data">
-    <input type="text" name="nombre" placeholder="Nombre" required><br>
-    <input type="text" name="apellido" placeholder="Apellido" required><br>
-    <input type="text" name="user_name" placeholder="Nombre de usuario" required><br>
-    <input type="email" name="email" placeholder="Correo electrónico" required><br>
-    <input type="password" name="password" placeholder="Contraseña" required><br>
-    <input type="text" name="phone" placeholder="Teléfono" required><br>
-    <input type="text" name="address" placeholder="Dirección" required><br>
+          <label>Usuario:</label>
+          <input type="text" name="user_name" required>
 
-    <label for="img">Imagen de usuario (opcional):</label>
-    <input type="file" name="img" accept="image/*"><br><br>
+          <label>Correo electrónico:</label>
+          <input type="email" name="email" required>
 
-    <button type="submit">Registrar</button>
-    <a href="index.php">Volver a la pantalla de inicio</a>
-</form>
+          <label>Contraseña:</label>
+          <input type="password" name="password" required>
 
+          <label>Teléfono:</label>
+          <input type="text" name="phone" required>
+
+          <label>Dirección:</label>
+          <textarea name="address" rows="2" required></textarea>
+
+          <button type="submit" class="btn-primary">Registrar</button>
+          <a href="login.php" class="volver-link">Ya tengo una cuenta</a>
+        </div>
+
+        <div class="profile-preview">
+          <h3>Vista previa</h3>
+          <div class="profile-pic">
+            <img id="previewImg" src="recursos/icons/perfil.png" alt="Vista previa">
+          </div>
+
+          <label for="img" class="upload-label">Subir imagen</label>
+          <input type="file" name="img" id="img" accept="image/*">
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const imgInput = document.getElementById('img');
+    const preview = document.getElementById('previewImg');
+
+    imgInput.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = ev => preview.src = ev.target.result;
+        reader.readAsDataURL(file);
+      }
+    });
+  </script>
 </body>
 </html>

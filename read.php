@@ -51,49 +51,15 @@ $conn->close();
 
 <link rel="stylesheet" href="css/headerFooter.css">
 <link rel="stylesheet" href="css/read.css">
+<link rel="shortcut icon" href="recursos/icons/IconoClaro.ico" type="image/x-icon">
 
 <title>Editar Producto</title>
 
-<style>
-        #userIcon {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #fff;
-        }
-
-        .logout-btn {
-            background-color: #ff4040;
-            color: white;
-            padding: 8px 12px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-left: 15px;
-            transition: background-color 0.3s ease;
-        }
-
-        .logout-btn:hover {
-            background-color: #cc0000;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .user-name {
-            font-weight: bold;
-            color: white;
-        }
-    </style>
 </head>
 <body>
 <header>
         <a href="index.php">
-            <img id="logo_head" src="recursos/img/palceholder 2.svg" alt="Logo GameBox">
+            <img id="logo_head" src="recursos/img/IconoClaro.png" alt="Logo GameBox">
         </a>
 
         <section id="menu_head">
@@ -143,45 +109,46 @@ $conn->close();
         <form action="agregar_carrito.php" method="POST">
         <input type="hidden" name="product_id" value="<?= $producto['product_id'] ?>">
         <input type="number" name="cantidad" value="1" min="1" max="<?= $producto['stock'] ?>" required>
-        <button type="submit" class="btn">🛒 Añadir al carrito</button>
+        <button type="submit" class="btn">
+            <img src="recursos/icons/carrito.png" alt="Agregar al carrito" class="icon">
+            <span>Agregar al carrito</span>
+        </button>
+
 </form>
 
     </div>
 </div>
-
-<div class="volver">
-    <a href="catalogo.php">← Volver al catálogo</a>
-</div>
+    <a href="catalogo.php" class="VerProductos">Volver al catálogo</a>
 
 <footer>
-            <div id="redes">
-                <ul>
-                    <li><a href=""><img src="recursos/icons/icons (1).png" alt=""></a></li>
-                    <li><a href=""><img src="recursos/icons/icons (1).webp" alt=""></a></li>
-                </ul>
-            </div>
-            
-            <div id="disclaimer">
-                <h4>© 2025 GameBox Market | Todos los derechos reservados.</h4>
-                <h4>Los diseños y productos que aparecen en el sitio pertenecen a sus respectivos creadores.</h4><br>
-            </div>
+    <div id="redes">
+        <ul>
+            <li><a href=""><img src="recursos/icons/icons (1).png" alt=""></a></li>
+            <li><a href=""><img src="recursos/icons/icons (1).webp" alt=""></a></li>
+        </ul>
+    </div>
+    
+    <div id="disclaimer">
+        <h4>© 2025 GameBox Market | Todos los derechos reservados.</h4>
+        <h4>Los diseños y productos que aparecen en el sitio pertenecen a sus respectivos creadores.</h4><br>
+    </div>
 
-            <h4>Si quieres conocer a los desarrolladores detrás del sitio,<a href="aboutUs.php"> haz click aquí</a></h4>
+    <h4>Si quieres conocer a los desarrolladores detrás del sitio,<a href="aboutUs.php"> haz click aquí</a></h4>
 
-            <div id="avisos">
-                <ul>
-                    <li>Aviso de Cookies</li>
-                    <li>Términos de uso</li>
-                    <li>Aviso de privacidad</li>
-                    <li>Ayuda</li>
-                    <li>Política sobre uso de materiales</li>
-                    <li>Declaración de afiliación</li>
-                    <li>Directrices para transmisiones</li>
-                    <li>Update notes</li>
-                    <li>Licencias de plugins</li>
-                </ul>
-            </div>
-        </footer>
+    <div id="avisos">
+        <ul>
+            <li>Aviso de Cookies</li>
+            <li>Términos de uso</li>
+            <li>Aviso de privacidad</li>
+            <li>Ayuda</li>
+            <li>Política sobre uso de materiales</li>
+            <li>Declaración de afiliación</li>
+            <li>Directrices para transmisiones</li>
+            <li>Update notes</li>
+            <li>Licencias de plugins</li>
+        </ul>
+    </div>
+</footer>
 
 </body>
 </html>

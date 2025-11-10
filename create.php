@@ -24,9 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bind_param("issdis", $product_tipo_id, $nombre, $description, $price, $stock, $imagen);
 
         if ($stmt->execute()) {
-            echo "<p>✅ Producto agregado con éxito</p>";
+        $successMessage = "Producto agregado con éxito";
         } else {
-            echo "<p>❌ Error: " . $stmt->error . "</p>";
+            $errorMessage = "Error: " . $stmt->error;
         }
 
         $stmt->close();
@@ -55,52 +55,16 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link rel="stylesheet" href="css/headerFooter.css">
     <link rel="stylesheet" href="css/create.css">
+    <link rel="shortcut icon" href="recursos/icons/IconoClaro.ico" type="image/x-icon">
 
     <title>Agregar Producto</title>
-
-    <style>
-        #userIcon {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #fff;
-        }
-
-        .logout-btn {
-            background-color: #ff4040;
-            color: white;
-            padding: 8px 12px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-left: 15px;
-            transition: background-color 0.3s ease;
-        }
-
-        .logout-btn:hover {
-            background-color: #cc0000;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .user-name {
-            font-weight: bold;
-            color: white;
-        }
-    </style>
 </head>
 <body>
 <header>
         <a href="index.php">
-            <img id="logo_head" src="recursos/img/palceholder 2.svg" alt="Logo GameBox">
+            <img id="logo_head" src="recursos/img/IconoClaro.png" alt="Logo GameBox">
         </a>
 
         <section id="menu_head">
@@ -116,7 +80,7 @@ $conn->close();
                     <?php if ($rol): ?>
                         <a href="carrito.php">Carrito de compras</a>
                     <?php else: ?>
-                        <a href="login.php"">Carrito de compras</a>
+                        <a href="login.php">Carrito de compras</a>
                     <?php endif; ?>
                 </li>
                 
@@ -139,13 +103,14 @@ $conn->close();
 
 <h2>Agregar Producto</h2>
 
-<form action="create.php" method="POST" enctype="multipart/form-data">
+<form action="create.php" method="POST" enctype="multipart/form-data" class="product-form">
+  <div class="form-container">
 
-    <label>Tipo de producto:</label><br>
-    <select name="product_tipo_id" required>
+    <div class="form-fields">
+      <label>Tipo de producto:</label><br>
+      <select name="product_tipo_id" required>
         <option value="">-- Selecciona un tipo --</option>
         <?php
-        // Mostrar opciones de tipo de producto
         if ($tipos_result->num_rows > 0) {
             while ($tipo = $tipos_result->fetch_assoc()) {
                 echo "<option value='{$tipo['product_tipo_id']}'>{$tipo['nombre']}</option>";
@@ -154,28 +119,59 @@ $conn->close();
             echo "<option value=''>No hay tipos registrados</option>";
         }
         ?>
-    </select><br><br>
+      </select><br><br>
 
-    <label>Nombre:</label><br>
-    <input type="text" name="nombre" required><br><br>
+      <label>Nombre:</label><br>
+      <input type="text" name="nombre" required><br><br>
 
-    <label>Descripción:</label><br>
-    <textarea name="description" required></textarea><br><br>
+      <label>Descripción:</label><br>
+      <textarea name="description" required></textarea><br><br>
 
-    <label>Precio:</label><br>
-    <input type="number" step="0.01" name="price" required><br><br>
+      <label>Precio:</label><br>
+      <input type="number" step="0.01" name="price" required><br><br>
 
-    <label>Stock:</label><br>
-    <input type="number" name="stock" required><br><br>
+      <label>Stock:</label><br>
+      <input type="number" name="stock" required><br><br>
 
-    <label>Imagen:</label><br>
-    <input type="file" name="img" accept="image/*" required><br><br>
+      <label>Imagen:</label><br>
+      <input type="file" name="img" accept="image/*" required><br><br>
+    </div>
 
-    <button type="submit">Guardar Producto</button>
+    <!-- Vista previa -->
+    <div class="preview-container">
+      <p>Vista previa:</p>
+      <img id="preview-img" src="#" alt="Vista previa de la imagen" style="display:none;">
+    </div>
+
+  </div>
+
+  <button type="submit" class="GuardarProducto">Guardar Producto</button>
 </form>
 
+<!-- Script para mostrar la vista previa -->
+<script>
+  const inputImagen = document.querySelector('input[type="file"]');
+  const previewImg = document.getElementById('preview-img');
+
+  inputImagen.addEventListener('change', function (event) {
+    const archivo = event.target.files[0];
+    if (archivo) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        previewImg.src = e.target.result;
+        previewImg.style.display = 'block';
+      };
+      reader.readAsDataURL(archivo);
+    } else {
+      previewImg.src = '#';
+      previewImg.style.display = 'none';
+    }
+  });
+</script>
+
+
 <br>
-<a href="catalogo.php">Ver productos</a>
+<a href="catalogo.php" class="VerProductos">Ver productos</a>
 
 <footer>
             <div id="redes">
@@ -206,6 +202,32 @@ $conn->close();
                 </ul>
             </div>
         </footer>
+
+        <?php if (!empty($successMessage) || !empty($errorMessage)): ?>
+            <div class="popup-overlay" id="popup">
+            <div class="popup-content">
+                <h3><?php echo !empty($successMessage) ? $successMessage : $errorMessage; ?></h3>
+                <button id="closePopup">Aceptar</button>
+            </div>
+            </div>
+
+            <script>
+            const popup = document.getElementById('popup');
+            const closeBtn = document.getElementById('closePopup');
+            popup.style.display = 'flex';
+
+            closeBtn.addEventListener('click', () => {
+                popup.style.opacity = '0';
+                setTimeout(() => popup.remove(), 300);
+            });
+
+            // También desaparecerá automáticamente después de 3 segundos
+            setTimeout(() => {
+                popup.style.opacity = '0';
+                setTimeout(() => popup.remove(), 300);
+            }, 3000);
+            </script>
+        <?php endif; ?>
 
 </body>
 </html>

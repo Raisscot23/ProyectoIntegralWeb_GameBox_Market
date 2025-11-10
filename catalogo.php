@@ -47,55 +47,14 @@ if ($filtro_tipo > 0) {
 
 <link rel="stylesheet" href="css/headerFooter.css">
 <link rel="stylesheet" href="css/catalogo.css">
+<link rel="shortcut icon" href="recursos/icons/IconoClaro.ico" type="image/x-icon">
 
 <title>Catálogo</title>
-<style>
-table { border-collapse: collapse; width: 100%; }
-th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
-img { display: block; max-width: 100px; height: auto; }
-a.button { padding: 5px 10px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 4px; }
-a.button.delete { background-color: #f44336; }
-
-#userIcon {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #fff;
-}
-
-.logout-btn {
-    background-color: #ff4040;
-    color: white;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-left: 15px;
-    transition: background-color 0.3s ease;
-}
-
-.logout-btn:hover {
-    background-color: #cc0000;
-}
-
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.user-name {
-    font-weight: bold;
-    color: white;
-}
-</style>
-
 </head>
 <body>
 <header>
     <a href="index.php">
-        <img id="logo_head" src="recursos/img/palceholder 2.svg" alt="Logo GameBox">
+        <img id="logo_head" src="recursos/img/IconoClaro.png" alt="Logo GameBox">
     </a>
 
     <section id="menu_head">
@@ -124,7 +83,7 @@ a.button.delete { background-color: #f44336; }
                         <button type="submit" class="logout-btn">Cerrar sesión</button>
                     </form>
                 <?php else: ?>
-                    <a href="login.php" class="logout-btn" style="background-color:#007bff;">Iniciar sesión</a>
+                    <a href="login.php" class="logout-btn" style="background-color:#0071bc;">Iniciar sesión</a>
                 <?php endif; ?>
             </li>
         </ul>
@@ -132,10 +91,6 @@ a.button.delete { background-color: #f44336; }
 </header>
 
 <h2>Lista de Productos</h2>
-
-<?php if ($rol == 1): ?>
-    <a href="create.php" class="button">Agregar Nuevo Producto</a><br><br>
-<?php endif; ?>
 
 <!------------------------- Filtro btn --------------------------->
 <form method="GET" action="catalogo.php">
@@ -149,43 +104,48 @@ a.button.delete { background-color: #f44336; }
         <?php endwhile; ?>
     </select>
 </form>
+<!------------------------- Fin de filtro btn --------------------------->
 
-<!------------------------- Lista de productos --------------------------->
-<table>
-<tr>
-    <th>Nombre</th>
-    <th>Descripción</th>
-    <th>Tipo</th>
-    <th>Precio</th>
-    <th>Stock</th>
-    <th>Imagen</th>
-    <th>Acciones</th>
-</tr>
+<!------------------------- Botón Agregar Producto (solo admin) --------------------------->
+<?php if ($rol == 1): // Mostrar Boton solo si el usuario es administrador ?>
+    <a href="create.php" class="add-product-btn">
+        <span class="icon"><img src="recursos/icons/subir.png" alt="Agregar"></span>
+    </a>
+<?php endif; ?>
 
+<!------------------------- Fin de Botón Agregar Producto --------------------------->
+
+<!------------------------- NUEVA VISTA EN TARJETAS --------------------------->
+<?php mysqli_data_seek($result, 0); // Reinicia el puntero del resultado ?>
+<div class="product-grid">
 <?php while($row = $result->fetch_assoc()): ?>
-<tr>
-    <td><?= htmlspecialchars($row['nombre']) ?></td>
-    <td><?= htmlspecialchars($row['description']) ?></td>
-    <td><?= htmlspecialchars($row['tipo_nombre']) ?></td>
-    <td>$<?= number_format($row['price'], 2) ?></td>
-    <td><?= $row['stock'] ?></td>
-    <td>
-        <?php if (!empty($row['img'])): ?>
-            <img src="data:image/jpeg;base64,<?= base64_encode($row['img']) ?>" alt="<?= htmlspecialchars($row['nombre']) ?>">
-        <?php else: ?>
-            Sin imagen
-        <?php endif; ?>
-    </td>
-    <td>
-        <a href="read.php?id=<?= $row['product_id'] ?>" class="button">Ver producto</a>
-        <?php if ($rol == 1): ?>
-            <a href="update.php?id=<?= $row['product_id'] ?>" class="button">Editar</a>
-            <a href="delete.php?id=<?= $row['product_id'] ?>" class="button delete" onclick="return confirm('¿Seguro que deseas eliminar este producto?');">Eliminar</a>
-        <?php endif; ?>
-    </td>
-</tr>
+    <div class="product-card">
+        <div class="card-content">
+            <?php if (!empty($row['img'])): ?>
+                <img src="data:image/jpeg;base64,<?= base64_encode($row['img']) ?>" alt="<?= htmlspecialchars($row['nombre']) ?>">
+            <?php else: ?>
+                <img src="recursos/img/NoImage.png" alt="Sin imagen">
+            <?php endif; ?>
+
+            <div class="product-info">
+                <h3><?= htmlspecialchars($row['nombre']) ?></h3>
+                <p><?= htmlspecialchars($row['tipo_nombre']) ?></p>
+                <p class="description"><?= htmlspecialchars($row['description']) ?></p>
+                <p class="price">$<?= number_format($row['price'], 2) ?></p>
+            </div>
+
+            <div class="product-actions">
+                <a href="read.php?id=<?= $row['product_id'] ?>"><img src="recursos/icons/masinfo.png" alt="Ver"></a>
+                <?php if ($rol == 1): ?>
+                    <a href="update.php?id=<?= $row['product_id'] ?>"><img src="recursos/icons/editar.png" alt="Editar"></a>
+                    <a href="delete.php?id=<?= $row['product_id'] ?>" class="delete" onclick="return confirm('¿Seguro que deseas eliminar este producto?');"><img src="recursos/icons/borrar.png" alt="Eliminar"></a>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
 <?php endwhile; ?>
-</table>
+</div>
+<!------------------------- FIN DE VISTA EN TARJETAS --------------------------->
 
 <!------------------------- Footer --------------------------->
 <footer>
